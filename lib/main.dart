@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense/widgets/user_transaction.dart';
-
-
+import 'package:personal_expense/widgets/new_transaction.dart';
+import 'package:personal_expense/widgets/transaction_list.dart';
+import 'models/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,58 +14,72 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Personal Expense",
+      title: "Personal Expenses",
       home: MyHomePage(),
-      theme: ThemeData(brightness: Brightness.light, primaryColor: Colors.cyan),
+      theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.cyan,
+          accentColor: Colors.lightBlueAccent,
+          appBarTheme: AppBarTheme(
+            centerTitle: true,
+            // textTheme: ThemeData.dark().textTheme.copyWith(
+            //       headline6: TextStyle(fontFamily: "OpenSans"),
+            //     ),
+          ),
+          fontFamily: 'Quicksand'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
- 
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
 
-  // final titleController = TextEditingController();
-  // final amountController = TextEditingController();
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
+    // Transaction(id: "t1", title: "Shoe", amount: 99.90, date: DateTime.now()),
+    // Transaction(
+    //     id: "t2", title: "Mobile", amount: 999.90, date: DateTime.now()),
+  ];
 
   // final List<Map> no = [{}, {}];
 
-  // Widget view() {
-  //   return ListView(
-  //     scrollDirection: Axis.vertical,
-  //     shrinkWrap: true,
-  //     children: transactions.map((tx) {
-  //       return Card(
-  //         child: Container(
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: [
-  //               Icon(Icons.money_rounded),
-  //               SizedBox(
-  //                 width: 30,
-  //               ),
-  //               Column(
-  //                 children: [
-  //                   Text(tx.title),
-  //                   SizedBox(
-  //                     height: 15,
-  //                   ),
-  //                   Text(DateFormat.yMMMd().format(tx.date)),
-  //                 ],
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     }).toList(),
-  //   );
-  // }
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+        id: DateTime.now().toString(),
+        title: txTitle,
+        amount: txAmount,
+        date: DateTime.now());
+
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return GestureDetector(
+            onTap: () {},
+            child: NewTransaction(_addNewTransaction),
+            behavior: HitTestBehavior.opaque,
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("PERSONAL EXPENSE"),
+        title: Text("PERSONAL EXPENSES"),
+        actions: [
+          IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: Icon(Icons.add),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -84,10 +98,16 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
             ),
-            UserTransaction(),
+            // NewTransaction(_addNewTransaction),
+            TransactionList(_userTransactions),
             // view(),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _startAddNewTransaction(context),
+        child: Icon(Icons.add),
       ),
     );
   }
