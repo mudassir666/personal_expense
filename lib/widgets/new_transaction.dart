@@ -1,5 +1,8 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_expense/widgets/adaptive_flat_button.dart';
 
 class NewTransaction extends StatefulWidget {
   // const NewTransaction({ Key? key }) : super(key: key);
@@ -18,9 +21,9 @@ class _NewTransactionState extends State<NewTransaction> {
   var _selectedDate;
 
   void _submitData() {
-   if(_amountController.text.isEmpty){
-     return;
-   }
+    if (_amountController.text.isEmpty) {
+      return;
+    }
 
     final enteredTitle = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
@@ -84,7 +87,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 height: 70,
                 child: Row(
                   children: [
-                     Expanded(
+                    Expanded(
                       child: Text(
                         _selectedDate == null
                             ? 'No Date Chosen!'
@@ -94,14 +97,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     SizedBox(
                       width: 12,
                     ),
-                    ElevatedButton(
-                      onPressed: _presentDataPicker,
-                      child: Text('Choose Date'),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColorLight),
-                      ),
-                    )
+                    AdaptiveFlatButton("Choose Date", _presentDataPicker),
                   ],
                 ),
               ),
