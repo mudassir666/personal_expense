@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import 'package:personal_expense/models/transaction.dart';
+import 'package:personal_expense/widgets/transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   // const TransactionList({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class TransactionList extends StatelessWidget {
                   "No Transactions added yets!",
                   style: Theme.of(context).textTheme.title,
                 ),
-                SizedBox(
+               const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -35,56 +35,7 @@ class TransactionList extends StatelessWidget {
           })
         : ListView.builder(
             itemBuilder: (context, index) {
-              return Card(
-                margin: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 5,
-                ),
-                elevation: 5,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text('\$${transactions[index].amount}'),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    transactions[index].title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    DateFormat.yMMMMd().format(transactions[index].date),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 460
-                      ? ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.white)),
-                          onPressed: () =>
-                              deleteTransaction(transactions[index].id),
-                          icon: Icon(
-                            Icons.delete,
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                          label: Text(
-                            "Delete",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColorDark),
-                          ),
-                        )
-                      : IconButton(
-                          onPressed: () =>
-                              deleteTransaction(transactions[index].id),
-                          icon: Icon(Icons.delete),
-                          color: Theme.of(context).primaryColorDark),
-                ),
-              );
+              return TransactionItem(transaction: transactions[index], deleteTransaction: deleteTransaction);
             },
             itemCount: transactions.length,
             // children: transactions.map((tx) {
